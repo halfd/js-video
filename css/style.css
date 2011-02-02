@@ -1,0 +1,101 @@
+body {
+	background	:	#fefefe;
+}
+
+video {
+	background	:	#000;
+	cursor		:	pointer;
+	cursor		:	hand;
+}
+
+#display {
+	position	:	relative;
+	width		:	550px;
+	margin		:	80px auto;
+}
+
+#display .playicon {
+	position	:	absolute;
+	top	        :	155px;
+	left		:	230px;
+	display		:	none;
+	cursor		:	pointer;
+	cursor		:	hand;
+}
+
+#display.paused .playicon {
+	display		:	block;
+}
+
+#up-scrubber {
+    position    :   relative;
+	background	:	#fefefe;
+	height		:	5px;
+	width		:	100%;
+	border-bottom	:	1px #dcdcdc solid;
+}
+
+#up-played,
+#up-buffered
+{
+    position    :   absolute;
+    top         :   0;
+    left        :   0;
+
+}
+
+#up-played {
+	background	:	#29c;
+	height		:	5px;
+	width		:	0px;
+}
+
+#up-buffered {
+	background	:	#dedeef;
+	height		:	5px;
+	width		:	0px;
+}
+
+#up-controls {
+}
+
+#up-controls 
+{
+	padding		:	0px;
+	border		:	1px #c3c3c3 solid;
+	background-image	:	url('gradient.png');
+	background-position	:	0 6;
+	-webkit-border-radius	:	0 0 5px 5px;
+	-moz-border-radius	:	0 0 5px 5px;
+	border-radius	:	0 0 5px 5px;
+    opacity         :   0.4;
+}
+
+#display:hover #up-controls{
+    opacity     :   1;
+}
+
+#up-controls #up-toggle {
+	margin		:	2px 2px 1px 2px;
+	height		:	25px;
+	width		:	31px;
+	background-image	:	url('icons.png');
+	cursor		:	pointer;
+	cursor		:	hand;
+}
+
+#up-controls #up-toggle {
+	background-position	:	-31px 0;
+}
+
+#display.paused #up-controls #up-toggle {
+	background-position	:	0 0;
+}
+
+#display.paused #up-controls #up-toggle:active {
+	background-position	:	-62px 0;
+}
+
+#up-controls #up-toggle:active {
+	background-position	:	31px 0;
+}
