@@ -31,7 +31,7 @@ var upVideo = function() {
 
         // This places the play icon inside the displayContainer
         playIcon = document.createElement('img');
-        playIcon.src = 'play.png';
+        playIcon.src = 'images/play.png';
         playIcon.className = 'playicon';
         playIcon.addEventListener('click', function() { upVideo.controls.play(); }, false );
 

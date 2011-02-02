@@ -63,7 +63,7 @@ video {
 {
 	padding		:	0px;
 	border		:	1px #c3c3c3 solid;
-	background-image	:	url('gradient.png');
+	background-image	:	url('../images/gradient.png');
 	background-position	:	0 6;
 	-webkit-border-radius	:	0 0 5px 5px;
 	-moz-border-radius	:	0 0 5px 5px;
@@ -79,7 +79,7 @@ video {
 	margin		:	2px 2px 1px 2px;
 	height		:	25px;
 	width		:	31px;
-	background-image	:	url('icons.png');
+	background-image	:	url('../images/icons.png');
 	cursor		:	pointer;
 	cursor		:	hand;
 }
