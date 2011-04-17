@@ -8,22 +8,33 @@ video {
 	cursor		:	hand;
 }
 
-#display {
+.upVideoDisplay {
 	position	:	relative;
-	width		:	550px;
+	width		:	640px;
 	margin		:	80px auto;
 }
 
-#display .playicon {
-	position	:	absolute;
+#playiconwrapper {
+    position    :   absolute;
+    top         :   0;
+    right       :   0;
+    bottom      :   36px;
+    left        :   0;
+    background  :   transparent;
+    overflow    :   hidden;
+}
+
+.upVideoDisplay .playicon {
+	position	:	relative;
 	top	        :	155px;
-	left		:	230px;
+	left		:	275px;
 	display		:	none;
 	cursor		:	pointer;
 	cursor		:	hand;
+    z-index     :   2000;
 }
 
-#display.paused .playicon {
+.upVideoDisplay.paused .playicon {
 	display		:	block;
 }
 
@@ -71,7 +82,7 @@ video {
     opacity         :   0.4;
 }
 
-#display:hover #up-controls{
+.upVideoDisplay:hover #up-controls{
     opacity     :   1;
 }
 
@@ -88,11 +99,11 @@ video {
 	background-position	:	-31px 0;
 }
 
-#display.paused #up-controls #up-toggle {
+.upVideoDisplay.paused #up-controls #up-toggle {
 	background-position	:	0 0;
 }
 
-#display.paused #up-controls #up-toggle:active {
+.upVideoDisplay.paused #up-controls #up-toggle:active {
 	background-position	:	-62px 0;
 }
 

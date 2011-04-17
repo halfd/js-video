@@ -5,7 +5,18 @@
 *
 */
 
-var upVideo = function() {
+var upVideo = Class.extend({
+    /*************************************************************
+     *
+     * upVideo autoinitiates itself when you include the javascript, 
+     * so you just have to tell it which div you want it to inject the 
+     * player into : 
+     * 
+     * var display = document.getElementById('display');
+     * upVideo.setup(display);
+     *
+     *************************************************************/
+
     // Private
     var displayContainer = null;
     var videoDisplay = null;
@@ -19,24 +30,56 @@ var upVideo = function() {
     var playedDisplay = null;
     var bufferedDisplay = null;
 
+    var videoSource = null;
+
+    // Testing
+    var html5video = (getUrlVars()['html5'] == 'oui');
+    var flashvideo = (!html5video);
+
     var __init__ = function() {
         // Do initial setup
 
         // This sets up the HTML5 video element
         // Make a fallback for flash etc.
-        videoDisplay = document.createElement('video');
-        videoDisplay.width = '550';
-        videoDisplay.height = '400';
-        videoDisplay.addEventListener('click', function() { upVideo.controls.toggle(); }, false );
+        if (html5video) {
+            videoDisplay = document.createElement('video');
+            videoDisplay.width = '640';
+            videoDisplay.height = '390';
+            //videoDisplay.addEventListener('click', function() { upVideo.controls.toggle(); }, false );
+            videoDisplay.addEventListener('ended', function() { upVideo.controls.pause(); }, false);
+        } else if (flashvideo) {
+            videoDisplay = document.createElement('object');
+            videoDisplay.width = '640';
+            videoDisplay.height = '390';
+            videoDisplay.id = 'videoDisplay';
+            param = document.createElement('param');
+            param.value = '../flex-test/callBack.swf';
+            param.name = 'movie';
+
+            var wmode = document.createElement('param');
+            wmode.name = 'wmode';
+            wmode.value = 'transparent';
+
+            embed = document.createElement('embed');
+            embed.id = 'videoDisplay';
+            embed.src = '../flex-test/callBack.swf';
+
+            videoDisplay.appendChild(param);
+            videoDisplay.appendChild(wmode);
+            videoDisplay.appendChild(embed);
+        }
 
         // This places the play icon inside the displayContainer
         playIcon = document.createElement('img');
         playIcon.src = 'images/play.png';
         playIcon.className = 'playicon';
-        playIcon.addEventListener('click', function() { upVideo.controls.play(); }, false );
 
-        // Some more EventListeners
-        videoDisplay.addEventListener('ended', function() { upVideo.controls.pause(); }, false);
+        playIconWrapper = document.createElement('div');
+        playIconWrapper.id = 'playiconwrapper';
+        playIconWrapper.appendChild(playIcon);
+        playIconWrapper.addEventListener('click', function() {
+        controls.toggle(); }, false );
+
         buildControls();
 
         return null
@@ -100,59 +143,110 @@ var upVideo = function() {
     // return public methods
     return {
         video: videoDisplay,
+        autoPlay : false,
 
         check: function() {
             return displayContainer;
         },
 
         setup: function(div) {
+            /****************************************************
+             * 
+             * Pass it a container DIV, then upVideo fills it with
+             * the video and controllers
+             * 
+             ****************************************************/
+
             displayContainer = div;
-            div.appendChild(playIcon);
             div.appendChild(videoDisplay);
+            div.appendChild(playIconWrapper);
             div.appendChild(controlDisplay);
-            displayContainer.className = 'paused';
+            displayContainer.className = displayContainer.className + ' paused';
         },
 
         loadVideo : function(videoId) {
-            videoDisplay.poster = 'video/' + videoId + '.jpg';
+            videoUrl = videoId;
+            if (html5video) {
+                upVideo.setSource();
+            } else if (flashvideo) {
+                // Wait for the flash element to be loaded before we try to set
+                // source
+            }
+        },
 
-            // Add the webm source
-            var source = document.createElement('source');
-            source.src = 'video/' + videoId + '.webm';
-            source.type = 'video/webm; codecs="vp8, vorbis"';
-            videoDisplay.appendChild(source);
+        setSource : function() {
+            var videoId = videoUrl;
+            if (html5video) {
+                videoDisplay.poster = 'video/' + videoId + '.jpg';
 
-            // Add the ogg source
-            var source = document.createElement('source');
-            source.src = 'video/' + videoId + '.ogg';
-            source.type = 'video/ogg; codecs="theora, vorbis"';
-            videoDisplay.appendChild(source);
+                // Add the webm source
+                var source = document.createElement('source');
+                source.src = 'video/' + videoId + '.webm';
+                source.type = 'video/webm; codecs="vp8, vorbis"';
+                videoDisplay.appendChild(source);
 
-            updateBufferedTimer = setInterval(updateBuffered, 100);
+                // Add the ogg source
+                var source = document.createElement('source');
+                source.src = 'video/' + videoId + '.ogg';
+                source.type = 'video/ogg; codecs="theora, vorbis"';
+                videoDisplay.appendChild(source);
+
+            } else if (flashvideo) {
+                videoDisplay.setSource('/js-video/video/' + videoId + '.mp4');
+            }
+
+            if (upVideo.autoPlay) {
+                upVideo.controls.play();
+            }
+        },
+
+        playerIsReady : function() {
+            upVideo.setSource();
         },
 
         controls : {
             play : function() {
                 // Start the timer that counts our progress
                 updateScrubberTimer = setInterval(updateScrubber, 100);
-                displayContainer.className = '';
+                displayContainer.className = 'upVideoDisplay';
                 return videoDisplay.play();
             },
             pause : function() {
                 // Stop the timer that counts our progress
                 clearInterval(updateScrubberTimer);
-                displayContainer.className = 'paused';
+                displayContainer.className = 'upVideoDisplay paused';
                 return videoDisplay.pause();
             },
             toggle : function() {
-                if (videoDisplay.paused) {
+                if (/paused/.test(displayContainer.className)) {
                     upVideo.controls.play();
                 } else {
                     upVideo.controls.pause();
                 }
 
                 return videoDisplay.paused
+            },
+            setCallback : function(funcStr, ms) {
+                videoDisplay.setTimerCallback(funcStr, ms);
+            },
+            status : function() {
+                videoDisplay.status();
             }
-        }
+        },
     }
-}();
+});
+
+// Helpers and temporary stuff
+
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+function besked(str) {
+    console.info(str);
+}
+

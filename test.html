@@ -1,15 +1,34 @@
 <html>
     <head>
         <title>Test af video element</title>
-        <script src="js/video.js"> </script>
+        <script src="js/class.js"> </script>
+        <script src="js/test.js"> </script>
+        <!-- <script src="js/video.js"> </script>-->
         <link rel="stylesheet" type="text/css" href="css/style.css" />
     </head>
-    <body>
-        <div id="display"></div>
+    <body onload="start();">
+        <div id="display1" class="upVideoDisplay"></div>
+        <div id="display2" class="upVideoDisplay"></div>
         <script>
-            var display = document.getElementById('display');
-            upVideo.setup(display);
-            upVideo.loadVideo('trailer_400p');
+            function doit() {
+                var display1 = document.getElementById('display1');
+                vid1 = upVideo();
+                vid1.setup(display1);
+                vid1.autoPlay = false;
+                vid1.loadVideo('trailer_400p');
+                
+                var display2 = document.getElementById('display2');
+                vid2 = upVideo();
+                vid2.setup(display2);
+                vid2.autoPlay = false;
+                vid2.loadVideo('trailer_400p');
+            }
+
+            function start() {
+                var display1 = document.getElementById('display1');
+                d = new upVideo(display1);
+                d.loadVideo('trailer_400p');
+            }
         </script>
     </body>
 </html>
